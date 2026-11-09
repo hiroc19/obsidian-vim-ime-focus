@@ -77,6 +77,22 @@ if [ -z "$im_select_found" ]; then
   echo "warning: im-select not found. Install it: brew install daipeihust/tap/im-select" >&2
 fi
 
+# If Obsidian is running with this vault open, load the plugin right away via
+# the Obsidian CLI (it targets the vault of the current directory). perl's
+# alarm guards against the CLI hanging when the vault is not open.
+if command -v obsidian >/dev/null 2>&1 && pgrep -xq Obsidian; then
+  live_result=$(cd "$vault_dir" && perl -e 'alarm 20; exec @ARGV' obsidian eval \
+    code="(async()=>{await app.plugins.loadManifests();await app.plugins.enablePluginAndSave('$PLUGIN_ID');return app.plugins.plugins['$PLUGIN_ID']?'loaded':'not loaded'})()" \
+    2>/dev/null || true)
+  case "$live_result" in
+    *"=> loaded"*)
+      echo "Obsidian: loaded into the running app. Done."
+      exit 0
+      ;;
+  esac
+  echo "Obsidian: could not load into the running app (vault not open or restricted mode)."
+fi
+
 cat <<'EOF'
 
 Next steps:

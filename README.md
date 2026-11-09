@@ -30,9 +30,10 @@ Obsidian の Vim モードに合わせて macOS の入力ソースを自動で�
    ~/ghq/github.com/hiroc19/obsidian-vim-ime-focus/install.sh <Vaultのパス>
    ```
 
-   `install.sh` は次の 2 つを行う。何度実行しても結果は同じで、既存のファイルやディレクトリは上書きしない。
+   `install.sh` は次のことを行う。何度実行しても結果は同じで、既存のファイルやディレクトリは上書きしない。
    - `.obsidian/plugins/hiroc-vim-ime-focus` に、このリポジトリへの相対 symlink を作る
    - `.obsidian/community-plugins.json` にプラグイン ID を追加して有効にする
+   - Obsidian が起動していて、その Vault を開いている場合は、Obsidian CLI（`obsidian`）で起動中のアプリへその場で読み込ませる。`Obsidian: loaded into the running app. Done.` と表示されたら、ここで完了（手順 2・4・5 は不要）
 4. Obsidian で Vault を開く。
 5. 「設定」→「コミュニティプラグイン」に「コミュニティプラグインを有効化」ボタンが出ている場合は、制限モードなので有効化する。新しい端末で初めて開いた Vault はこの状態になっている。
 6. インストール済みプラグインの一覧に `Hiroc Vim IME Focus` があり、有効になっていることを確認する。
