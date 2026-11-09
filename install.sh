@@ -41,6 +41,25 @@ else
   echo "linked: $target -> $link_value"
 fi
 
+# Register the plugin as enabled. Obsidian reads this list only at startup.
+# JXA (osascript) is used because macOS ships no standalone JSON editor.
+enable_result=$(osascript -l JavaScript - "$vault_dir/.obsidian/community-plugins.json" "$PLUGIN_ID" <<'JXA'
+function run(argv) {
+  const [file, id] = argv;
+  let list = [];
+  if ($.NSFileManager.defaultManager.fileExistsAtPath(file)) {
+    const text = $.NSString.stringWithContentsOfFileEncodingError(file, $.NSUTF8StringEncoding, null).js;
+    list = JSON.parse(text);
+  }
+  if (list.includes(id)) return "already enabled";
+  list.push(id);
+  $(JSON.stringify(list, null, 2)).writeToFileAtomicallyEncodingError(file, true, $.NSUTF8StringEncoding, null);
+  return "enabled";
+}
+JXA
+)
+echo "community-plugins.json: $enable_result"
+
 im_select_found=""
 for candidate in \
   /opt/homebrew/bin/im-select \
@@ -58,4 +77,12 @@ if [ -z "$im_select_found" ]; then
   echo "warning: im-select not found. Install it: brew install daipeihust/tap/im-select" >&2
 fi
 
-echo "Enable \"Hiroc Vim IME Focus\" in Obsidian: Settings > Community plugins."
+cat <<'EOF'
+
+Next steps:
+  1. Quit Obsidian completely (Cmd+Q) and reopen the vault.
+     A running Obsidian does not pick up new plugin folders.
+  2. If Settings > Community plugins shows "Turn on community plugins"
+     (restricted mode), turn it on.
+  3. Confirm "Hiroc Vim IME Focus" is listed and enabled.
+EOF
