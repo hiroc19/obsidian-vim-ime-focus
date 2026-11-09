@@ -1,0 +1,9 @@
+{
+  "id": "hiroc-vim-ime-focus",
+  "name": "Hiroc Vim IME Focus",
+  "version": "0.2.0",
+  "minAppVersion": "1.7.2",
+  "description": "Keeps macOS input source in sync with Obsidian Vim mode, including window focus changes.",
+  "author": "hiroc19",
+  "isDesktopOnly": true
+}
